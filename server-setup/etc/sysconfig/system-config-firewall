@@ -1,7 +1,0 @@
-# Configuration file for system-config-firewall
-
---enabled
---service=ssh
---service=http
---service=https
---service=smtp
