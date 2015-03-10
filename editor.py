@@ -15,19 +15,21 @@ import lxml
 import lxml.html
 from lxml.builder import E
 
+basedir = os.path.dirname(os.path.realpath(__file__))
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.config.update(dict(
-#  REPO_URL='git@github.com:SaraUckelman/dmnes.git',
+  REPO_URL='git@github.com:SaraUckelman/dmnes.git',
 #  REPO_URL='git@github.com:uckelman/test.git',
-  REPO_URL='file:///home/uckelman/projects/dmnes/dmnes',
-  USERS_DIR='users',
-  CNF_DIR='CNFs',
-  VNF_DIR='VNFs',
-  BIB_DIR='bib',
-  CNF_SCHEMA='schemata/cnf.xsd',
-  VNF_SCHEMA='schemata/vnf.xsd',
+#  REPO_URL='file:///home/uckelman/projects/dmnes/dmnes',
+  USERS_DIR=os.path.join(basedir, 'users'),
+  CNF_DIR=os.path.join(basedir, 'CNFs'),
+  VNF_DIR=os.path.join(basedir, 'VNFs'),
+  BIB_DIR=os.path.join(basedir, 'bib'),
+  CNF_SCHEMA=os.path.join(basedir, 'schemata/cnf.xsd'),
+  VNF_SCHEMA=os.path.join(basedir, 'schemata/vnf.xsd'),
   SECRET_KEY=os.urandom(128),
   DEBUG=False
 ))
