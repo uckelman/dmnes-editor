@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xml="http://www.w3.org/XML/1998/namespace">
+
+  <xs:import schemaLocation="http://www.w3.org/2001/xml.xsd"
+             namespace="http://www.w3.org/XML/1998/namespace"/>
 
   <!-- nonempty_string_t definition -->
   <xs:simpleType name="nonempty_string_t">
@@ -14,6 +19,7 @@
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
       <xs:any processContents="lax"/>
     </xs:sequence>
+    <xs:attribute ref="xml:space" default="preserve"/>
   </xs:complexType>
 
   <!-- meta_t definition -->
