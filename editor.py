@@ -107,7 +107,7 @@ def do_cmd(cwd, *args):
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT
   ) as proc:
-    out = proc.communicate(timeout=30)[0].decode('utf-8')
+    out = proc.communicate(timeout=60)[0].decode('utf-8')
     if proc.returncode:
       raise SubprocessError(
         returncode=proc.returncode,
@@ -126,7 +126,7 @@ def do_cmd_out(cwd, ok, *args):
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE
   ) as proc:
-    out, err = (x.decode('utf-8') for x in proc.communicate(timeout=10))
+    out, err = (x.decode('utf-8') for x in proc.communicate(timeout=30))
     if not ok(proc.returncode):
       raise SubprocessError(
         returncode=proc.returncode,
