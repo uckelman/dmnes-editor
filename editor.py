@@ -12,7 +12,6 @@ import werkzeug.security
 from flask import Flask, Response, abort, flash, redirect, render_template, request, session, url_for
 
 import lxml
-import lxml.html
 from lxml.builder import E
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -275,7 +274,7 @@ def element_raw_inner(key, obj, skip_empty=True):
   if skip_empty and not val:
     return ''
 
-  return lxml.html.fromstring('<{0}>{1}</{0}>'.format(key, val))
+  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
 
 
 def indent(node, depth):
@@ -315,7 +314,7 @@ def vnf_build(vnf, schema):
       )
     ),
     (
-      lxml.html.fromstring('<nym>{}</nym>'.format(v))
+      lxml.etree.fromstring('<nym>{}</nym>'.format(v))
         for v in vnf.getlist('nym') if v
     ),
     (
@@ -344,7 +343,7 @@ def vnf_build(vnf, schema):
 def bib_build(bib, schema):
   root = E.bibl(
     element('key', bib),
-    lxml.html.fromstring(bib['entry'])
+    lxml.etree.fromstring(bib['entry'])
   )
 
   indent(root, 0)
