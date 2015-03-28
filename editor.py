@@ -413,7 +413,6 @@ def slash():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  error = None
   if request.method == 'POST':
     username = request.form['username']
     password = request.form['password']
@@ -430,7 +429,7 @@ def login():
     else:
       flash('Invalid username or password!', 'error')
 
-  return render_template('login.html', vals={})
+  return render_template('login.html')
 
 
 @app.route('/logout')
