@@ -43,10 +43,6 @@ app.config.from_pyfile('config.py')
 app.config['USERS'] = { x[0]: User(*x) for x in app.config['USERS'] }
 
 
-# must follow creation of app
-from auth import auth_user
-
-
 #
 # XML schemata
 #
