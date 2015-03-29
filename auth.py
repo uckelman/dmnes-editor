@@ -4,6 +4,9 @@ import werkzeug.security
 
 from flask import current_app, flash, redirect, render_template, request, session, url_for
 
+
+import config
+
 #
 # User accounts
 #
@@ -30,6 +33,11 @@ class User(object):
 #
 
 def login_required(f):
+  # pass through if authentication is disabled
+  if getattr(config, 'DISABLE_AUTH', False):
+    return f
+
+  # otherwise redirect to login page if unauthenticated
   @functools.wraps(f)
   def decorated_function(*args, **kwargs):
     if 'username' not in session:
