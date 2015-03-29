@@ -2,7 +2,7 @@ import functools
 
 import werkzeug.security
 
-from flask import app, redirect, request, url_for
+from flask import redirect, request, url_for
 
 #
 # User accounts

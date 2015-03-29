@@ -14,7 +14,7 @@ from flask import Flask, Response, abort, flash, redirect, render_template, requ
 import lxml
 from lxml.builder import E
 
-from auth import User, auth_user, login_required
+from auth import User, login_required
 
 
 def default_config():
@@ -41,6 +41,10 @@ app = Flask(__name__)
 app.config.update(default_config())
 app.config.from_pyfile('config.py')
 app.config['USERS'] = { x[0]: User(*x) for x in app.config['USERS'] }
+
+
+# must follow creation of app
+from auth import auth_user
 
 
 #
