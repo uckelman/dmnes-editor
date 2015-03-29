@@ -38,7 +38,7 @@ def default_config():
 
 
 app = Flask(__name__)
-app.config.from_object(default_config())
+app.config.update(default_config())
 app.config.from_pyfile('config.py')
 app.config['USERS'] = { x[0]: User(*x) for x in app.config['USERS'] }
 
