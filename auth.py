@@ -2,7 +2,7 @@ import functools
 
 import werkzeug.security
 
-from flask import redirect, request, url_for
+from flask import redirect, request, session, url_for
 
 #
 # User accounts
@@ -28,11 +28,6 @@ class User(object):
 #
 # User authentication
 #
-
-def auth_user(username, password):
-  user = app.config['USERS'].get(username, None)
-  return user and user.check_password(password)
-
 
 def login_required(f):
   @functools.wraps(f)

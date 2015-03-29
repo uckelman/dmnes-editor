@@ -382,6 +382,11 @@ def push_back_to_git(username):
 # URL handlers
 #
 
+def auth_user(username, password):
+  user = app.config['USERS'].get(username, None)
+  return user and user.check_password(password)
+
+
 @app.route('/')
 @login_required
 def slash():
