@@ -1,12 +1,12 @@
 #!/usr/bin/python3 -b
 
 import datetime
-import functools
 import itertools
 import os
 import subprocess
 import traceback
 import unicodedata
+
 import werkzeug.datastructures
 
 from flask import Flask, Response, abort, flash, redirect, render_template, request, session, url_for
@@ -14,29 +14,33 @@ from flask import Flask, Response, abort, flash, redirect, render_template, requ
 import lxml
 from lxml.builder import E
 
-from auth import accounts, auth_user
+from auth import auth_user, login_required
 
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-USERS_DIR = os.path.join(BASE_DIR, 'users')
-SCHEMA_DIR = os.path.join(BASE_DIR, 'schemata')
+def default_config():
+  # locally scope these
+  base_dir = os.path.dirname(os.path.realpath(__file__))
+  users_dir = os.path.join(base_dir, 'users')
+  schema_dir = os.path.join(base_dir, 'schemata')
+
+  return dict(
+    BASE_DIR=base_dir,
+    USERS_DIR=users_dir,
+    SCHEMA_DIR=schema_dir,
+    CNF_DIR='CNFs',
+    VNF_DIR='VNFs',
+    BIB_DIR='bib',
+    CNF_SCHEMA=os.path.join(schema_dir, 'cnf.xsd'),
+    VNF_SCHEMA=os.path.join(schema_dir, 'vnf.xsd'),
+    SECRET_KEY=os.urandom(128),
+    DEBUG=False
+  )
+
 
 app = Flask(__name__)
-app.config.from_object(__name__)
-
-app.config.update(dict(
-  REPO_URL='git@github.com:SaraUckelman/dmnes.git',
-#  REPO_URL='git@github.com:uckelman/test.git',
-#  REPO_URL='file:///home/uckelman/projects/dmnes/dmnes',
-  USERS_DIR=os.path.join(BASE_DIR, 'users'),
-  CNF_DIR='CNFs',
-  VNF_DIR='VNFs',
-  BIB_DIR='bib',
-  CNF_SCHEMA=os.path.join(SCHEMA_DIR, 'cnf.xsd'),
-  VNF_SCHEMA=os.path.join(SCHEMA_DIR, 'vnf.xsd'),
-  SECRET_KEY=os.urandom(128),
-  DEBUG=False
-))
+app.config.from_object(default_config())
+app.config.from_pyfile('config.py')
+app.config['USERS'] = { x[0]: User(*x) for x in app.config['USERS'] }
 
 
 #
@@ -343,7 +347,7 @@ def prepare_git(username):
   if not repo_exists:
     # set up local repo
     git_clone(app.config['USERS_DIR'], app.config['REPO_URL'], username)
-    user = accounts[username]
+    user = app.config['USERS'][username]
     git_config_user(upath, user.realname, user.email)
     git_config(upath, 'push.default', 'simple')
     git_create_branch(upath, username)
@@ -359,7 +363,7 @@ def commit_to_git(username, path, tree):
   upath = repo_for(username)
   write_tree(tree, os.path.join(upath, path))
   git_add_file(upath, path)
-  user = accounts[username]
+  user = app.config['USERS'][username]
   author = '{} <{}>'.format(user.realname, user.email)
   msg = 'Added ' + path
   git_commit_file(upath, author, msg, path)
@@ -373,16 +377,6 @@ def push_back_to_git(username):
 #
 # URL handlers
 #
-
-def login_required(f):
-  @functools.wraps(f)
-  def decorated_function(*args, **kwargs):
-    if 'username' not in session:
-      return redirect(url_for('login', next=request.url))
-    return f(*args, **kwargs)
-
-  return decorated_function
-
 
 @app.route('/')
 @login_required

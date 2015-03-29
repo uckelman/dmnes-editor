@@ -1,0 +1,10 @@
+REPO_URL='file:///home/jsmith/dmnes'
+
+USERS = (
+  (
+    'jsmith', # pw: foo
+    'pbkdf2:sha1:1000$wRFvgaHp$0c5716c50f66eda4495ffb48b02a5ff12c78ed04',
+    'John Smith',
+    'jsmith@example.com'
+  )
+)
