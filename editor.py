@@ -14,7 +14,7 @@ from flask import Flask, Response, abort, flash, redirect, render_template, requ
 import lxml
 from lxml.builder import E
 
-from auth import auth_user, login_required
+from auth import User, auth_user, login_required
 
 
 def default_config():
