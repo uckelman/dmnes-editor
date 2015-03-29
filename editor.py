@@ -7,6 +7,7 @@ import os
 import subprocess
 import traceback
 import unicodedata
+import werkzeug.datastructures
 
 from flask import Flask, Response, abort, flash, redirect, render_template, request, session, url_for
 
