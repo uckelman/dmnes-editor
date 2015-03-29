@@ -2,7 +2,7 @@ import functools
 
 import werkzeug.security
 
-from flask import flash, redirect, render_template, request, session, url_for
+from flask import current_app, flash, redirect, render_template, request, session, url_for
 
 #
 # User accounts
@@ -39,17 +39,17 @@ def login_required(f):
   return decorated_function
 
 
-def auth_user(app, username, password):
-  user = app.config['USERS'].get(username, None)
+def auth_user(username, password):
+  user = current_app.config['USERS'].get(username, None)
   return user and user.check_password(password)
 
 
-def handle_login(app, login_setup, default_redirect):
+def handle_login(login_setup, default_redirect):
   if request.method == 'POST':
     username = request.form['username']
     password = request.form['password']
 
-    if auth_user(app, username, password):
+    if auth_user(username, password):
       session['username'] = username
       flash('Welcome, ' + username + '.', 'notice')
       login_setup(username)

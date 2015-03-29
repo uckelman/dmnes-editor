@@ -391,7 +391,7 @@ def login_setup(username):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  return handle_login(app, login_setup, 'vnf')
+  return handle_login(login_setup, 'vnf')
 
 
 def logout_teardown(username):
