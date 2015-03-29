@@ -378,46 +378,30 @@ def push_back_to_git(username):
 # URL handlers
 #
 
-def auth_user(username, password):
-  user = app.config['USERS'].get(username, None)
-  return user and user.check_password(password)
-
-
 @app.route('/')
 @login_required
 def slash():
   return 'Welcome to the DMNES!'
 
 
+def login_setup(username):
+  prepare_git(username)
+  session['cnf'] = session['vnf'] = session['bib'] \
+                                  = datetime.datetime.utcnow()
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  if request.method == 'POST':
-    username = request.form['username']
-    password = request.form['password']
+  return handle_login(app, login_setup, 'vnf')
 
-    if auth_user(username, password):
-      session['username'] = username
-      prepare_git(username)
-      flash('Welcome, ' + username + '.', 'notice')
 
-      session['cnf'] = session['vnf'] = session['bib'] \
-                                      = datetime.datetime.utcnow()
-
-      return redirect(request.args.get('next') or url_for('vnf'))
-    else:
-      flash('Invalid username or password!', 'error')
-
-  return render_template('login.html')
+def logout_teardown(username):
+  push_back_to_git(username)
 
 
 @app.route('/logout')
 @login_required
 def logout():
-  username = session.pop('username', None)
-  if username:
-    push_back_to_git(username)
-    flash('Goodbye, ' + username + '.', 'notice')
-  return redirect(url_for('login'))
+  return handle_logout(logout_teardown)
 
 
 def conditional_response(key, func, username):
