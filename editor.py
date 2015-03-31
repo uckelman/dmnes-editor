@@ -9,7 +9,7 @@ import unicodedata
 
 import werkzeug.datastructures
 
-from flask import Flask, Response, abort, flash, redirect, render_template, request, session, url_for
+from flask import Flask, Response, abort, flash, render_template, request, session
 
 import lxml
 from lxml.builder import E
@@ -121,12 +121,12 @@ def do_grep(cwd, opts, pat, *paths):
 
 def get_bibkeys(repo_dir):
   bib_dir = app.config['BIB_DIR']
-  return do_grep(repo_dir, '-hoPr', '^\s*<key>\\K[^<]+', bib_dir)
+  return do_grep(repo_dir, '-hoPr', '^\\s*<key>\\K[^<]+', bib_dir)
 
 
 def get_nyms(repo_dir):
   cnf_dir = app.config['CNF_DIR']
-  return do_grep(repo_dir, '-hoPr', '^\s*<nym>\\K[^<]+', cnf_dir)
+  return do_grep(repo_dir, '-hoPr', '^\\s*<nym>\\K[^<]+', cnf_dir)
 
 
 #
@@ -357,7 +357,7 @@ def prepare_git(username):
     git_checkout_branch(upath, username)
     git_pull(upath, 'origin', username)
     git_pull(upath, 'origin', 'master')
- 
+
 
 def commit_to_git(username, path, tree):
   upath = repo_for(username)
@@ -371,7 +371,7 @@ def commit_to_git(username, path, tree):
 
 def push_back_to_git(username):
   upath = repo_for(username)
-  git_push(upath, 'origin', username + ':' + username) 
+  git_push(upath, 'origin', username + ':' + username)
 
 
 #
@@ -404,10 +404,11 @@ def logout():
   return handle_logout(logout_teardown)
 
 
+RFC1123 = '%a, %d %b %Y %H:%M:%S GMT'
+
+
 def conditional_response(key, func, username):
   mtime_local = session[key]
-
-  RFC1123 = '%a, %d %b %Y %H:%M:%S GMT'
 
   try:
     ims = request.headers['If-Modified-Since']
