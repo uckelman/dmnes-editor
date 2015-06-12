@@ -64,6 +64,7 @@
       <xs:enumeration value="nom"/>
       <xs:enumeration value="obl"/>
       <xs:enumeration value="unc"/>
+      <xs:enumeration value="voc"/>
     </xs:restriction>
   </xs:simpleType>
 
