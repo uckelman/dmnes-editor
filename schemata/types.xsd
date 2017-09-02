@@ -105,6 +105,13 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <!-- lit_t definition -->
+  <xs:complexType name="lit_t">
+    <xs:complexContent>
+      <xs:extension base="anything_t"/>
+    </xs:complexContent>
+  </xs:complexType>
+
   <!-- usg_t definition -->
   <xs:complexType name="usg_t">
     <xs:complexContent>

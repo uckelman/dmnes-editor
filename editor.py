@@ -266,6 +266,7 @@ def cnf_build(cnf, schema):
     element_raw_inner('etym', cnf, skip_empty=False),
     element_raw_inner('usg', cnf),
     element_raw_inner('def', cnf),
+    element_raw_inner('lit', cnf),
     element_raw_inner('note', cnf)
   )
 
